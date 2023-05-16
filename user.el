@@ -6,10 +6,12 @@
 (setq inhibit-startup-message t
       cursor-type 'bar)
 (defalias 'yes-or-no-p 'y-or-n-p)
+(setq backup-directory-alist '(("" . "~/.emacs-backup")))
 
 ;; Define package repositories
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
 ;; use use-package to simplify the config
@@ -22,9 +24,9 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
+; (use-package all-the-icons)
+(use-package nerd-icons
+  :ensure t)
 
 ;;themes
 (use-package doom-themes
@@ -33,25 +35,17 @@
   (setq doom-themes-enable-bold t
 	doom-themes-enable-italic t)
   (load-theme 'doom-nord t))
+;(use-package doom-modeline
+;  :ensure t
+;  :init (doom-modeline-mode 1))
+
+(use-package telephone-line
+  :ensure t
+  :init (telephone-line-mode 1))
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode)
-
-;; helpful ui components
-(use-package ivy
-  :diminish
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t))
-
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)))
-
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1)
-  :config
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
 (use-package projectile
   :ensure t
@@ -62,6 +56,15 @@
 
 (use-package magit
   :init (setq magit-define-global-key-bindings t))
+
+(use-package cmake-font-lock)
+
+(setq helm-file (expand-file-name "helm.el" user-emacs-directory))
+(when (file-exists-p helm-file)
+  (load helm-file))
+(setq ivy-file (expand-file-name "ivy.el" user-emacs-directory))
+;(when (file-exists-p ivy-file)
+;  (load ivy-file))
 
 (use-package lsp-mode
   :init
@@ -75,7 +78,7 @@
   :commands lsp-ui-mode)
 
 (use-package lsp-ivy
-  :commands lsp-ivy-workspace-symbol)
+  :bind ("C-c /" . lsp-ivy-workspace-symbol))
 
 ;;(use-package corfu
 ;;  :after lsp-mode
@@ -87,7 +90,20 @@
 (use-package company
   :after lsp-mode
   :bind (:map company-active-map
-	      ("<tab>" . company-compelete-selection))
+	 ("<tab>" . company-compelete-common-or-cycle))
   :init
   (global-company-mode))
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(helm-lsp helm which-key use-package rainbow-delimiters projectile magit lsp-ui lsp-ivy ivy-rich doom-themes doom-modeline counsel corfu company)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

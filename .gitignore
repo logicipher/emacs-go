@@ -13,3 +13,8 @@
 elpa/*
 eln-cache/*
 auto-save-list/*
+.lsp-session-v1
+project*
+recentf
+transient/*
+.emacs-backup/*
