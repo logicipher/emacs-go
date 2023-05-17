@@ -29,15 +29,28 @@
   :ensure t)
 
 ;;themes
-(use-package doom-themes
-  :ensure t
-  :config
-  (setq doom-themes-enable-bold t
-	doom-themes-enable-italic t)
-  (load-theme 'doom-nord t))
+;(use-package doom-themes
+;  :ensure t
+;  :config
+;  (setq doom-themes-enable-bold t
+;	doom-themes-enable-italic t)
+;  (load-theme 'doom-horizon t))
 ;(use-package doom-modeline
 ;  :ensure t
 ;  :init (doom-modeline-mode 1))
+
+(use-package spacemacs-theme
+  :config
+  (setq spacemacs-theme-comment-italic t)
+  (setq spacemacs-theme-keyword-italic t)
+  (load-theme 'spacemacs-dark))
+
+(use-package tree-sitter
+  :init
+  (global-tree-sitter-mode)
+  :hook (tree-sitter-after-on . tree-sitter-hl-mode))
+(use-package tree-sitter-langs
+  :after tree-sitter)
 
 (use-package telephone-line
   :ensure t
@@ -75,10 +88,18 @@
   :commands (lsp lsp-deferred))
 
 (use-package lsp-ui
-  :commands lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-update-mode 'line)
+  (setq lsp-ui-sideline-show-code-actions t)
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  :commands lsp-ui-mode
+  ;:bind (:map lsp-ui-mode-map
+	;      ([remap xref-find-references] . lsp-ui-peek-find-references)
+	;      ([remap xref-find-definitions] . lsp-ui-peek-find-definitions))
+)
 
-(use-package lsp-ivy
-  :bind ("C-c /" . lsp-ivy-workspace-symbol))
 
 ;;(use-package corfu
 ;;  :after lsp-mode
@@ -94,16 +115,4 @@
   :init
   (global-company-mode))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(helm-lsp helm which-key use-package rainbow-delimiters projectile magit lsp-ui lsp-ivy ivy-rich doom-themes doom-modeline counsel corfu company)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+

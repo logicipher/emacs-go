@@ -15,5 +15,5 @@
   :config
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
-;(use-package lsp-ivy
-;  :bind ("C-c /" . lsp-ivy-workspace-symbol))
+(use-package lsp-ivy
+  :bind ("C-c /" . lsp-ivy-workspace-symbol))
