@@ -43,7 +43,7 @@
   :config
   (setq spacemacs-theme-comment-italic t)
   (setq spacemacs-theme-keyword-italic t)
-  (load-theme 'spacemacs-dark))
+  (load-theme 'spacemacs-dark t))
 
 (use-package tree-sitter
   :init
@@ -85,7 +85,9 @@
   :hook ((c++-mode . lsp-mode)
 	 (elisp-mode . lsp-mode)
 	 (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred))
+  :commands (lsp lsp-deferred)
+  :config
+  (setq lsp-clients-clangd-args '("--background-index" "--header-insertion=never")))
 
 (use-package lsp-ui
   :config
