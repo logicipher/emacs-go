@@ -71,7 +71,9 @@
   :init (setq smerge-command-prefix "\C-cm"))
 
 (use-package magit
-  :init (setq magit-define-global-key-bindings t))
+  :init (setq magit-define-global-key-bindings t)
+  :config
+  (setq magit-log-margin '(t "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))
 
 (use-package cmake-font-lock)
 
