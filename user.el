@@ -29,21 +29,21 @@
   :ensure t)
 
 ;;themes
-;(use-package doom-themes
-;  :ensure t
-;  :config
-;  (setq doom-themes-enable-bold t
-;	doom-themes-enable-italic t)
-;  (load-theme 'doom-horizon t))
+(use-package doom-themes
+ :ensure t
+ :config
+ (setq doom-themes-enable-bold t
+	doom-themes-enable-italic t)
+ (load-theme 'doom-nord t))
 ;(use-package doom-modeline
 ;  :ensure t
 ;  :init (doom-modeline-mode 1))
 
-(use-package spacemacs-theme
-  :config
-  (setq spacemacs-theme-comment-italic t)
-  (setq spacemacs-theme-keyword-italic t)
-  (load-theme 'spacemacs-dark t))
+;; (use-package spacemacs-theme
+;;   :config
+;;   (setq spacemacs-theme-comment-italic t)
+;;   (setq spacemacs-theme-keyword-italic t)
+;;   (load-theme 'spacemacs-dark t))
 
 (use-package tree-sitter
   :init
@@ -66,6 +66,9 @@
   (projectile-mode +1)
   :bind (:map projectile-mode-map
 	      ("C-c p" . projectile-command-map)))
+
+(use-package smerge-mode
+  :init (setq smerge-command-prefix "\C-cm"))
 
 (use-package magit
   :init (setq magit-define-global-key-bindings t))
