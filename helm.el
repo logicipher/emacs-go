@@ -7,7 +7,8 @@
   :config
   (helm-mode 1)
   ;(setq helm-split-window-in-side-p t)
-  (setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
+  ;; (setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
+  (setq helm-display-function 'helm-display-buffer-in-own-frame)
   ;(setq helm-show-completion-display-functions #'helm-display-buffer-in-own-frame)
 )
 

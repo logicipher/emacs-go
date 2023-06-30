@@ -168,8 +168,9 @@
   "Make compilation window spilted vertically"
   (progn
     (if (not (get-buffer-window "*compilation*"))
-        (progn
-          (split-window-vertically)
-          ))
+	(let ((w (split-window-vertically)))
+	  (select-window w)
+	  (switch-to-buffer "*compilation*"))
+      )
     ))
 (add-hook 'compilation-mode-hook 'lc-compilation-hook)
