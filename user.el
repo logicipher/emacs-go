@@ -142,6 +142,9 @@
 ;; auto complete braces pair
 (add-hook 'prog-mode-hook #'electric-pair-mode)
 
+(use-package ace-window
+  :bind (("C-x o" . ace-window)))
+
 (defcustom lc-window-command-prefix (kbd "C-x w")
   "Prefix for window operation commands."
   :type 'string
@@ -174,3 +177,16 @@
       )
     ))
 (add-hook 'compilation-mode-hook 'lc-compilation-hook)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(helm-projectile which-key use-package tree-sitter-langs telephone-line spacemacs-theme rainbow-delimiters projectile magit lsp-ui lsp-ivy ivy-rich helm-lsp flycheck doom-themes doom-modeline counsel company cmake-font-lock all-the-icons)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
