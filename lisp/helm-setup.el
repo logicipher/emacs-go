@@ -22,4 +22,6 @@
   :bind (("C-c"))
   :config
   (helm-projectile-on)
-)
+  )
+
+(provide 'helm-setup)
