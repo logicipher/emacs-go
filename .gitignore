@@ -18,3 +18,5 @@ project*
 recentf
 transient/*
 .emacs-backup/*
+eshell/*
+private-snippets/*

@@ -15,11 +15,11 @@
 (use-package helm-lsp
   :bind (("C-c /" . helm-lsp-workspace-symbol)))
 
-(use-package helm-ag)
+(use-package helm-ag
+  :bind (("C-x /" . helm-do-ag)))
 
 (use-package helm-projectile
   :requires (helm-ag)
-  :bind (("C-c"))
   :config
   (helm-projectile-on)
   )
