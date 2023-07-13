@@ -8,7 +8,15 @@
          (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred)
   :config
-  (setq lsp-clients-clangd-args '("-j=8" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory")))
+  (setq lsp-clients-clangd-args '("-j=8" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory"))
+  (progn
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-tramp-connection "clangd.sh")
+		      :major-modes '(c-mode c++-mode)
+		      :remote? t
+		      :server-id 'clangd-remote)))
+  )
+
 
 (use-package lsp-ui
   :config

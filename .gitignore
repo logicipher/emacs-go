@@ -20,3 +20,4 @@ transient/*
 .emacs-backup/*
 eshell/*
 private-snippets/*
+tramp

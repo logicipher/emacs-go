@@ -8,3 +8,8 @@
 (require 'proj-setup)
 (require 'lang-setup)
 (require 'snippet-setup)
+
+(use-package tramp
+  :config
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+)
