@@ -19,10 +19,14 @@
 
 
 (use-package lsp-ui
+  :bind (("C-c l f" . lsp-ui-doc-focus-frame)
+	 ("C-c l u" . lsp-ui-doc-unfocus-frame))
   :config
   (setq lsp-ui-sideline-show-diagnostics t)
   (setq lsp-ui-sideline-update-mode 'line)
   (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-doc-show-with-cursor t)
+  (setq lsp-ui-doc-position 'at-point)
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   :commands lsp-ui-mode
