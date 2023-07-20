@@ -14,6 +14,13 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;
+;; we want no tabs, detect and prevent inserting tabs
+;;
+(setq x-stretch-cursor t)
+(setq-default indent-tabs-mode nil)
+(setq tab-stop-list (number-sequence 4 120 4))
+
+;;
 ;; self-defined window operation key bindings
 ;;
 (defcustom lc-window-command-prefix (kbd "C-x w")
@@ -106,5 +113,18 @@ for them")
     ))
 (add-hook 'compilation-mode-hook 'lc-compilation-hook)
 
+
+;;
+;; browser setting if the system is wsl
+;;
+(with-eval-after-load 'browse-url
+  (when (and (eq system-type 'gnu/linux)
+             (string-match "Linux.*[mM]icrosoft.*Linux"
+                           (shell-command-to-string "uname -a")))
+    (setq
+     browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe"
+     browse-url-generic-args '("/c" "start")
+     browse-url-browser-function #'browse-url-generic))
+)
 
 (provide 'basic-setup)

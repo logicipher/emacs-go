@@ -10,7 +10,7 @@
 
 (use-package markdown-mode
   :ensure t
-  :mode ("README\\.md\\'" . gfm-mode)
+  :mode ("\\.md\\'" . gfm-mode)
   :init (setq markdown-command "pandoc"))
 
 (provide 'lang-setup)

@@ -11,7 +11,7 @@
   (setq lsp-clients-clangd-args '("-j=8" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory"))
   (progn
     (lsp-register-client
-     (make-lsp-client :new-connection (lsp-tramp-connection "clangd.sh")
+     (make-lsp-client :new-connection (lsp-tramp-connection '("clangd" "-j=8" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory"))
 		      :major-modes '(c-mode c++-mode)
 		      :remote? t
 		      :server-id 'clangd-remote)))
@@ -19,8 +19,6 @@
 
 
 (use-package lsp-ui
-  :bind (("C-c l f" . lsp-ui-doc-focus-frame)
-	 ("C-c l u" . lsp-ui-doc-unfocus-frame))
   :config
   (setq lsp-ui-sideline-show-diagnostics t)
   (setq lsp-ui-sideline-update-mode 'line)
@@ -30,10 +28,10 @@
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   :commands lsp-ui-mode
-  ;:bind (:map lsp-ui-mode-map
-        ;      ([remap xref-find-references] . lsp-ui-peek-find-references)
-        ;      ([remap xref-find-definitions] . lsp-ui-peek-find-definitions))
-  )
+  :bind (:map lsp-ui-mode-map
+              ("C-c l f" . lsp-ui-doc-focus-frame)
+              ("C-c l u" . lsp-ui-doc-unfocus-frame))
+)
 
 (use-package flycheck
   :ensure t
@@ -51,7 +49,7 @@
 (use-package company
   :after lsp-mode
   :bind (:map company-active-map
-         ("<tab>" . company-compelete-common-or-cycle))
+         ("<tab>" . company-complete-common-or-cycle))
   :init
   (global-company-mode))
 
