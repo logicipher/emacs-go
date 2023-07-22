@@ -9,4 +9,14 @@
    ;;org-preview-html-viewer 'xwidget
    ))
 
+(use-package org
+  :config
+  ;; for our custom language, we dont need to load it with
+  ;; `org-babel-do-load-languages' since this function just `require'
+  ;; the feature called ob-* using the car of the pair.
+  (require 'org-custom-babel)
+  (org-babel-do-load-languages 'org-babel-load-languages '((C . t)))
+  )
+
+
 (provide 'org-setup)
