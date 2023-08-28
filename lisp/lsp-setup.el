@@ -50,7 +50,7 @@
   :after lsp-mode
   :bind (:map company-active-map
          ("<tab>" . company-complete-common-or-cycle))
-  :init
-  (global-company-mode))
+  :hook
+  ((prog-mode . company-mode)))
 
 (provide 'lsp-setup)
