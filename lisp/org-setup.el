@@ -1,6 +1,7 @@
 ;;
 ;; org mode setup
 ;;
+(add-hook 'org-mode-hook #'visual-line-mode)
 (use-package org-preview-html
   ;; :hook (org-mode . org-preview-html-mode)
   :config

@@ -94,7 +94,8 @@ for them")
 (add-hook 'prog-mode-hook #'electric-pair-mode)
 
 ;; better search experience
-(setq grep-command "ag --vimgrep")
+(setq grep-command "ag --vimgrep"
+      grep-use-null-device nil)
 
 ;;
 ;; better compilation buffer
@@ -113,6 +114,12 @@ for them")
     ))
 (add-hook 'compilation-mode-hook 'lc-compilation-hook)
 
+;; make compilation aware of ansi color characters
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (ansi-color-apply-on-region compilation-filter-start (point)))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
 
 ;;
 ;; browser setting if the system is wsl
@@ -125,6 +132,8 @@ for them")
      browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe"
      browse-url-generic-args '("/c" "start")
      browse-url-browser-function #'browse-url-generic))
-)
+  )
+
+(setq-default fill-column 80)
 
 (provide 'basic-setup)
