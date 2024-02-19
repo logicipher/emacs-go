@@ -22,3 +22,5 @@ eshell/*
 private-snippets/*
 tramp
 bookmarks
+straight/*
+url/*

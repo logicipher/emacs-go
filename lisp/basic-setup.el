@@ -106,7 +106,10 @@ for them")
 (defun lc-compilation-hook ()
   "Make compilation window spilted vertically"
   (progn
-    (if (not (get-buffer-window "*compilation*"))
+    ;; check it's not grep mode since grep-mode is derived from compilation-mode
+    ;; when embark-export grep buffer, it tries to split minibuffer which causes
+    ;; error
+    (unless (or (string= major-mode "grep-mode") (get-buffer-window "*compilation*"))
 	(let ((w (split-window-vertically)))
 	  (select-window w)
 	  (switch-to-buffer "*compilation*"))
@@ -135,5 +138,7 @@ for them")
   )
 
 (setq-default fill-column 80)
+
+(setq enable-recursive-minibuffers t)
 
 (provide 'basic-setup)

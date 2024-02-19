@@ -3,6 +3,7 @@
 ;;
 (add-hook 'org-mode-hook #'visual-line-mode)
 (use-package org-preview-html
+  :straight t
   ;; :hook (org-mode . org-preview-html-mode)
   :config
   (setq
@@ -11,6 +12,7 @@
    ))
 
 (use-package org
+  :straight t
   :config
   ;; for our custom language, we dont need to load it with
   ;; `org-babel-do-load-languages' since this function just `require'
@@ -27,6 +29,7 @@
 
 
 (use-package pdf-tools
+  :straight t
   :defer t
   :config
   (pdf-loader-install)

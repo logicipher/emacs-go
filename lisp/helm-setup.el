@@ -1,4 +1,5 @@
 (use-package helm
+  :straight t
   :init
   (setq helm-command-prefix-key "C-c c")
   :bind (("M-x" . helm-M-x)
@@ -13,12 +14,15 @@
 )
 
 (use-package helm-lsp
+  :straight t
   :bind (("C-c /" . helm-lsp-workspace-symbol)))
 
 (use-package helm-ag
+  :straight t
   :bind (("C-x /" . helm-do-ag)))
 
 (use-package helm-projectile
+  :straight t
   :requires (helm-ag)
   :config
   (helm-projectile-on)

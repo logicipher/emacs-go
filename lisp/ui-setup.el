@@ -1,19 +1,22 @@
 (use-package rainbow-delimiters
+  :straight t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-; (use-package all-the-icons)
-(use-package nerd-icons
-  :ensure t)
+(use-package all-the-icons
+  :straight t
+  :if (display-graphic-p))
+;; (use-package nerd-icons
+;;   :straight t)
 
 ;;themes
 (use-package doom-themes
- :ensure t
+ :straight t
  :config
  (setq doom-themes-enable-bold t
        doom-themes-enable-italic t)
  (load-theme 'doom-gruvbox t))
 ;(use-package doom-modeline
-;  :ensure t
+;  :straight t
 ;  :init (doom-modeline-mode 1))
 
 ;; (use-package spacemacs-theme
@@ -23,10 +26,11 @@
 ;;   (load-theme 'spacemacs-dark t))
 
 (use-package telephone-line
-  :ensure t
+  :straight t
   :init (telephone-line-mode 1))
 
 (use-package which-key
+  :straight t
   :init
   (setq which-key-show-early-on-C-h t
         which-key-idle-delay 5

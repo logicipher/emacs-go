@@ -1,40 +1,12 @@
-(use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((c++-mode . lsp-mode)
-         (c-mode . lsp-mode)
-         ;; (elisp-mode . lsp-mode)
-         ;; (emacs-lisp-mode . lsp-mode)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred)
-  :config
-  (setq lsp-clients-clangd-args '("-j=8" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory"))
-  (progn
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-tramp-connection '("clangd" "-j=8" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory"))
-		      :major-modes '(c-mode c++-mode)
-		      :remote? t
-		      :server-id 'clangd-remote)))
-  )
+;;
+;; LSP conf, use lsp-mode or eglot
+;;
 
-
-(use-package lsp-ui
-  :config
-  (setq lsp-ui-sideline-show-diagnostics t)
-  (setq lsp-ui-sideline-update-mode 'line)
-  (setq lsp-ui-sideline-show-code-actions t)
-  ;; (setq lsp-ui-doc-show-with-cursor t)
-  (setq lsp-ui-doc-position 'at-point)
-  ;; (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  ;; (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-  :commands lsp-ui-mode
-  :bind (:map lsp-ui-mode-map
-              ("C-c l f" . lsp-ui-doc-focus-frame)
-              ("C-c l u" . lsp-ui-doc-unfocus-frame))
-)
+;; (require 'lsp-mode-setup)
+(require 'eglot-setup)
 
 (use-package flycheck
-  :ensure t
+  :straight t
   :hook ((c++-mode . flycheck-mode)
 	 (c-mode . flycheck-mode)))
 
@@ -47,10 +19,51 @@
 ;;  :init (global-corfu-mode))
 
 (use-package company
-  :after lsp-mode
+  :straight t
   :bind (:map company-active-map
          ("<tab>" . company-complete-common-or-cycle))
   :hook
-  ((prog-mode . company-mode)))
+  ((prog-mode . company-mode))
+
+  :config
+  (setq company-tooltip-flip-when-above t
+        ;; search candidates in space-separated regexp
+        company-search-regexp-function 'company-search-words-in-any-order-regexp
+        company-show-quick-access 'left)
+  (global-set-key (kbd "C-c C-/") #'company-other-backend)
+
+  (defun lc/eglot-company-hook ()
+    (interactive)
+    (setq-local company-backends
+                '(company-bbdb
+                  company-semantic
+                  company-cmake
+                  (company-capf :with company-yasnippet)
+                  company-clang
+                  company-files
+                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  company-oddmuse
+                  company-dabbrev)))
+  (defun lc/lsp-mode-company-hook ()
+    (interactive)
+    (setq-local company-backends
+                '(company-bbdb
+                  company-semantic
+                  company-cmake
+                  (company-yasnippet :with company-capf)
+                  company-clang
+                  company-files
+                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  company-oddmuse
+                  company-dabbrev)))
+  ;; after eglot lsp connected, it sets the company backend, so we need to
+  ;; change it after connecting. This only happens when using eglot
+  (if (featurep 'eglot-setup)
+      (add-hook 'eglot-managed-mode-hook #'lc/eglot-company-hook)
+    ;; in lsp-mode, company-capf seems to block yasnippet, so we use a different
+    ;; hook
+    (add-hook 'lsp-mode-hook #'lc/lsp-mode-company-hook))
+  )
+
 
 (provide 'lsp-setup)

@@ -1,5 +1,5 @@
 (use-package projectile
-  :ensure t
+  :straight t
   :init
   (projectile-mode +1)
   :bind (:map projectile-mode-map
@@ -9,6 +9,7 @@
   :init (setq smerge-command-prefix "\C-cm"))
 
 (use-package magit
+  :straight t
   :init (setq magit-define-global-key-bindings t)
   :config
   (setq magit-log-margin '(t "%Y-%m-%d %H:%M " magit-log-margin-width t 18)))

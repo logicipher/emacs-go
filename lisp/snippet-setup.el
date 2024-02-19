@@ -1,8 +1,8 @@
 (use-package yasnippet
-  :ensure t
+  :straight t
   :hook ((prog-mode . yas-minor-mode)
 	 (org-mode . yas-minor-mode)
-	 (elisp-mode . yas-minor-mode))
+	 (emacs-lisp-mode . yas-minor-mode))
   :config
   (yas-reload-all)
   (setq yas-snippet-dirs
