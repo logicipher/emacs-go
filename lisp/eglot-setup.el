@@ -37,6 +37,8 @@
       ;; help
       (define-key map "hh" 'eldoc)
       (define-key map "hb" 'flymake-show-buffer-diagnostics)
+      ;; rename
+      (define-key map "rr" 'eglot-rename)
       map))
 
   :config
@@ -76,8 +78,16 @@
          :deferred :textDocument/hover))
       t))
   (defun lc/eglot-eldoc-hook ()
-    (unless (eglot--stay-out-of-p 'eldoc)
-      (add-hook 'eldoc-documentation-functions #'lc/eglot-signature-function nil t)))
+    (cond
+     (eglot--managed-mode
+      (unless (eglot--stay-out-of-p 'eldoc)
+        ;; since we cannot remove this hook when eglot disconnect, when
+        ;; restarting it has to always be added as the first one. But there is
+        ;; side-effect when eglot just shuts down but not restart
+        (add-hook 'eldoc-documentation-functions #'lc/eglot-signature-function -100 t)))))
+
+  ;; unlike the doc of eglot-managed-mode-hook, it's run only when eglot starts
+  ;; to manage the buffer
   (add-hook 'eglot-managed-mode-hook #'lc/eglot-eldoc-hook)
   )
 
