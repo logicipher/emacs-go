@@ -9,8 +9,64 @@
          (c-mode . eglot-ensure)
          (emacs-lisp-mode . eglot-ensure))
   :init
-  ;; setup keymap
 
+
+  :config
+  (add-to-list 'eglot-server-programs
+               '((c++-mode c-mode) . ("clangd" "-j=16" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory")))
+
+  ;;
+  ;; Help function to execute all code actions
+  (defun lc/eglot-code-actions-all (beg &optional end action-kind interactive)
+    "Find LSP code actions of type ACTION-KIND between BEG and END.
+Interactively, offer to execute them.
+If ACTION-KIND is nil, consider all kinds of actions.
+Interactively, default BEG and END to region's bounds else BEG is
+point and END is nil, which results in a request for code actions
+at point.  With prefix argument, prompt for ACTION-KIND."
+    (interactive
+     `(,@(eglot--code-action-bounds)
+       ,(and current-prefix-arg
+             (completing-read "[eglot] Action kind: "
+                              '("quickfix" "refactor.extract" "refactor.inline"
+                                "refactor.rewrite" "source.organizeImports")))
+       t))
+    (eglot-server-capable-or-lose :codeActionProvider)
+    (let* ((server (eglot--current-server-or-lose))
+           (actions
+            (eglot--request
+             server
+             :textDocument/codeAction
+             (list :textDocument (eglot--TextDocumentIdentifier)
+                   :range (list :start (eglot--pos-to-lsp-position beg)
+                                :end (eglot--pos-to-lsp-position end))
+                   :context
+                   `(:diagnostics
+                     [,@(cl-loop for diag in (flymake-diagnostics beg end)
+                                 when (cdr (assoc 'eglot-lsp-diag
+                                                  (eglot--diag-data diag)))
+                                 collect it)]
+                     ,@(when action-kind `(:only [,action-kind]))))))
+           ;; Redo filtering, in case the `:only' didn't go through.
+           (actions (cl-loop for a across actions
+                             when (or (not action-kind)
+                                      ;; github#847
+                                      (string-prefix-p action-kind (plist-get a :kind)))
+                             collect a)))
+      (if interactive
+          (lc/eglot--read-execute-code-action-all actions server action-kind)
+        actions)))
+
+  (defun lc/eglot--read-execute-code-action-all (actions server &optional action-kind)
+    "Helper for interactive calls to `eglot-code-actions'."
+    (progn
+      (or (cl-loop for a in actions
+                   do (eglot-execute server a))
+          (apply #'eglot--error
+                 (if action-kind `("No \"%s\" code actions here" ,action-kind)
+                   `("No code actions here"))))))
+  ;; setup keymap
+  ;;
   ;; keymap prefix
   (defvar lc-eglot-keymap-prefix "C-c l")
   (defvar lc-eglot-command-map
@@ -34,20 +90,20 @@
       ;;action
       (define-key map "aa" 'eglot-code-actions)
       (define-key map "aq" 'eglot-code-actions-quickfix)
+      (define-key map "aA" 'lc/eglot-code-actions-all)
       ;; help
       (define-key map "hh" 'eldoc)
       (define-key map "hb" 'flymake-show-buffer-diagnostics)
       ;; rename
       (define-key map "rr" 'eglot-rename)
       map))
-
-  :config
-  (add-to-list 'eglot-server-programs
-               '((c++-mode c-mode) . ("clangd" "-j=16" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory")))
-
   (define-key eglot-mode-map (kbd lc-eglot-keymap-prefix) lc-eglot-command-map)
   (setq eldoc-echo-area-use-multiline-p nil)
 
+
+
+
+  
   (defun lc/eglot-handle-render-for-echo-area (contents &optional _range)
     "Personal handler for extracting a single line form RENDERED, appropriate for
   display in echo area."
