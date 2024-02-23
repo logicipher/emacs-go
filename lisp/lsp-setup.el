@@ -29,7 +29,9 @@
   (setq company-tooltip-flip-when-above t
         ;; search candidates in space-separated regexp
         company-search-regexp-function 'company-search-words-in-any-order-regexp
-        company-show-quick-access 'left)
+        company-show-quick-access 'left
+        company-idle-delay 0.5
+        company-minimum-prefix-length 1)
   (global-set-key (kbd "C-c C-/") #'company-other-backend)
 
   (defun lc/eglot-company-hook ()

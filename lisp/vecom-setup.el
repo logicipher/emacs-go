@@ -195,7 +195,7 @@
   :straight t
   :custom
   ;; used completion styles, substring is for <TAB> completion for vertico
-  (completion-styles '(substring orderless basic))
+  (completion-styles '(orderless substring basic))
   (completion-category-defaults nil)
   ;; special 
   (completion-category-overrides '((file (styles basic partial-completion))))
