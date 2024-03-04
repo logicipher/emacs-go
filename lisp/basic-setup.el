@@ -141,4 +141,9 @@ for them")
 
 (setq enable-recursive-minibuffers t)
 
+;;
+;; useful key bindings
+;;
+(define-key global-map [remap list-buffers] #'ibuffer)
+
 (provide 'basic-setup)

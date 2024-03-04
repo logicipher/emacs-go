@@ -5,15 +5,19 @@
 ;;   :straight t)
 (use-package eglot
   :straight t
-  :hook ((c++-mode . eglot-ensure)
-         (c-mode . eglot-ensure)
-         (emacs-lisp-mode . eglot-ensure))
+  :hook ((prog-mode . eglot-ensure))
   :init
 
 
   :config
   (add-to-list 'eglot-server-programs
                '((c++-mode c-mode) . ("clangd" "-j=16" "--background-index" "--header-insertion=never" "--all-scopes-completion" "--clang-tidy" "--function-arg-placeholders" "--pch-storage=memory")))
+
+  ;; make eglot highlight with light-grey background
+  (set-face-attribute 'eglot-highlight-symbol-face nil
+                      :background (if (display-graphic-p)
+                                      "gray29"
+                                    "color-239"))
 
   ;;
   ;; Help function to execute all code actions
