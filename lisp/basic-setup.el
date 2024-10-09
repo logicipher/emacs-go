@@ -115,7 +115,46 @@ for them")
 	  (switch-to-buffer "*compilation*"))
       )
     ))
-(add-hook 'compilation-mode-hook 'lc-compilation-hook)
+;; (add-hook 'compilation-mode-hook 'lc-compilation-hook)
+
+;; smart compilation window
+(defun intelligent-display-compilation-buffer (buffer _alist)
+  "Display the compilation BUFFER at the bottom of the frame."
+  (let ((window (display-buffer-in-side-window buffer '((side . bottom) ))))
+    (select-window window)
+    (set-window-dedicated-p window t)
+    window))
+
+(defun close-compilation-window-if-successful (buffer string)
+  "Close the compilation window if the compilation was successful.
+BUFFER is the compilation buffer, and STRING describes the compilation result."
+  (when (and (string-match "finished" string)
+             (not (string-match "warning" string)))
+    (run-at-time "2 sec" nil
+                 (lambda (buf)
+                   (let ((win (get-buffer-window buf)))
+                     (when win
+                       (delete-window win))))
+                 buffer)))
+
+;; Modify the behavior of displaying the compilation buffer
+(setq display-buffer-alist
+      '(("\\*compilation\\*"
+         (intelligent-display-compilation-buffer))))
+
+;; Automatically close the compilation buffer if successful
+(setq compilation-finish-functions 'close-compilation-window-if-successful)
+
+;; Advice the default compile function to always use intelligent display
+(defun compile-with-smart-display (orig-fun &rest args)
+  "Advice to use smart display for compile commands."
+  (let ((display-buffer-overriding-action
+         '((intelligent-display-compilation-buffer))))
+    (apply orig-fun args)))
+
+(advice-add 'compile :around #'compile-with-smart-display)
+(advice-add 'recompile :around #'compile-with-smart-display)
+
 
 ;; make compilation aware of ansi color characters
 (require 'ansi-color)
