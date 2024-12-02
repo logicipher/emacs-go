@@ -40,8 +40,7 @@
 (use-package embark
   :straight t
   :bind
-  (("C-c ." . embark-act)           ;; embark action
-   ("C-c e" . embark-export)        ;; embark export
+  (("C-." . embark-act)           ;; embark action
    ("C-h B" . embark-bindings))     ;; better `describe-bindings'
 
   :init
@@ -91,6 +90,7 @@
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
+         ("M-g r" . consult-register)              ;; jump register
          ;; M-s bindings in `search-map'
          ("M-s d" . consult-find)                  ;; Alternative: consult-fd
          ("M-s c" . consult-locate)

@@ -9,6 +9,10 @@
 (column-number-mode)
 ;; (global-display-line-numbers-mode t)
 (set-face-attribute 'default (selected-frame) :height 150)
+(set-face-attribute 'region nil
+                    :background (if (display-graphic-p)
+                                    "chocolate4"
+                                  "color-94"))
 (setq inhibit-startup-message t
       cursor-type 'hbar)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -119,11 +123,15 @@ for them")
 
 ;; smart compilation window
 (defun intelligent-display-compilation-buffer (buffer _alist)
-  "Display the compilation BUFFER at the bottom of the frame."
-  (let ((window (display-buffer-in-side-window buffer '((side . bottom) ))))
-    (select-window window)
-    (set-window-dedicated-p window t)
-    window))
+  "Display the compilation BUFFER at the bottom of the frame, reusing an existing window if available."
+  (let ((existing-window (get-buffer-window buffer)))
+    (if existing-window
+        (select-window existing-window)
+      (let ((window (display-buffer-in-side-window buffer '((side . bottom) (window-height . 0.3)))))
+        (select-window window)
+        (set-window-dedicated-p window t)
+        window))))
+
 
 (defun close-compilation-window-if-successful (buffer string)
   "Close the compilation window if the compilation was successful.
@@ -184,5 +192,14 @@ BUFFER is the compilation buffer, and STRING describes the compilation result."
 ;; useful key bindings
 ;;
 (define-key global-map [remap list-buffers] #'ibuffer)
+
+;; Keybinding to open a new line like Vim's "o"
+(defun open-newline-below ()
+  "Open a new line below the current line and move to it."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+(global-set-key (kbd "C-o") 'open-newline-below)
 
 (provide 'basic-setup)
